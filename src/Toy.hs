@@ -1,2 +1,26 @@
 module Toy where
 
+type SourceCode  = String
+type Interactive = [Input] -> [Output]
+type Input  = String
+type Output = String
+
+drive :: Interactive -> (String -> String)
+drive f = unlines . f . lines
+
+toy :: SourceCode -> Interactive
+toy prog = undefined
+
+type ToyState = ()
+
+eval :: ToyState -> [ToyState]
+eval state = state : rests
+    where
+        rests | isFinal state = []
+              | otherwise     = eval (step state)
+            
+isFinal :: ToyState -> Bool
+isFinal state = undefined
+
+step :: ToyState -> ToyState
+step state = undefined
