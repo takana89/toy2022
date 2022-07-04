@@ -44,8 +44,27 @@ isFinal (flg, _, _, _, _) = flg
 step :: ToyState -> ToyState
 step state = execute (decode (fetch state)) state
 
-type Code = ()
+type Code = (Operator, Operand)
 
+data Operator
+    = STOP
+    | GET
+    | PRONT
+    | LOAD
+    | STORE
+    | ADD
+    | SUB
+    | GOTO
+    | IFZERO
+    | IFPOS
+    deriving (Show, Read)
+
+data Operand
+    = None
+    | Num Int
+    | Lab Label
+    deriving (Show, Read) 
+    
 fetch :: ToyState -> Code
 fetch state = undefined
 

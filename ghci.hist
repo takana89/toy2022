@@ -1,4 +1,6 @@
 :q
+:l src/Toy.hs
+:q
 :r
 :r
 :l src/Toy.hs
