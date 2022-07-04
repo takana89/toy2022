@@ -9,7 +9,18 @@ drive :: Interactive -> (String -> String)
 drive f = unlines . f . lines
 
 toy :: SourceCode -> Interactive
-toy prog = undefined
+toy prog = map output . eval . initState (load prog)
+
+type Memory = ()
+
+load :: SourceCode -> Memory
+load = undefined
+
+initState :: Memory -> ([Input] -> ToyState)
+initState mem inputs = undefined
+
+output :: ToyState -> Output
+output state = undefined
 
 type ToyState = ()
 
