@@ -11,7 +11,12 @@ drive f = unlines . f . lines
 toy :: SourceCode -> Interactive
 toy prog = map output . eval . initState (load prog)
 
-type Memory = ()
+type Label  = String
+type Memory = [(Label, Content)]
+
+data Content
+    = Code Code
+    | Data Int
 
 load :: SourceCode -> Memory
 load = undefined
@@ -20,9 +25,12 @@ initState :: Memory -> ([Input] -> ToyState)
 initState mem inputs = undefined
 
 output :: ToyState -> Output
-output state = undefined
+output state = case state of
+    (_, _, _, _, output) -> output
 
-type ToyState = ()
+type ToyState = (Final, Memory, Acc, [Input], Output)
+type Final = Bool
+type Acc   = Int
 
 eval :: ToyState -> [ToyState]
 eval state = state : rests
@@ -31,7 +39,7 @@ eval state = state : rests
               | otherwise     = eval (step state)
             
 isFinal :: ToyState -> Bool
-isFinal state = undefined
+isFinal (flg, _, _, _, _) = flg
 
 step :: ToyState -> ToyState
 step state = execute (decode (fetch state)) state
