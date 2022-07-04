@@ -34,4 +34,17 @@ isFinal :: ToyState -> Bool
 isFinal state = undefined
 
 step :: ToyState -> ToyState
-step state = undefined
+step state = execute (decode (fetch state)) state
+
+type Code = ()
+
+fetch :: ToyState -> Code
+fetch state = undefined
+
+type Instruction = ToyState -> ToyState
+
+decode :: Code -> Instruction
+decode code = undefined
+
+execute :: Instruction -> ToyState -> ToyState
+execute cmd state = cmd state
