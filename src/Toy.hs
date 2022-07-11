@@ -1,5 +1,8 @@
 module Toy where
 
+import Data.Char
+import Numeric
+
 type SourceCode  = String
 type Interactive = [Input] -> [Output]
 type Input  = String
@@ -17,9 +20,23 @@ type Memory = [(Label, Content)]
 data Content
     = Code Code
     | Data Int
+    deriving Eq
+
+instance Read Content where
+    readsPrec _ str = case words str of
+        [cnt] -> case readSigned readDec cnt of
+            [(num, "")] -> [(Data num, "")]
+            _           -> [(Code (read cnt, None), "")]
+        [op, arg]
+              -> [(Code (read op, read arg), "")]
 
 load :: SourceCode -> Memory
-load = undefined
+load = map trans . lines
+
+trans :: String -> (Label, Content)
+trans s = case break isSpace s of
+    ([], []) -> error "empty line"
+    (lab, content) -> (lab, read content)
 
 initState :: Memory -> ([Input] -> ToyState)
 initState mem inputs = undefined
@@ -29,6 +46,7 @@ output state = case state of
     (_, _, _, _, output) -> output
 
 type ToyState = (Final, Memory, Acc, [Input], Output)
+
 type Final = Bool
 type Acc   = Int
 
@@ -57,14 +75,21 @@ data Operator
     | GOTO
     | IFZERO
     | IFPOS
-    deriving (Show, Read)
+    deriving (Eq, Show, Read)
 
 data Operand
     = None
     | Num Int
     | Lab Label
-    deriving (Show, Read) 
-    
+    deriving (Eq, Show)
+
+instance Read Operand where
+    readsPrec _ str  = case words str of
+        [oprd] -> case readSigned readDec oprd of
+            [(num, "")] -> [(Num num, "")]
+            _           -> [(Lab oprd, "")]
+        _      -> []
+
 fetch :: ToyState -> Code
 fetch state = undefined
 
